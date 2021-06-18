@@ -3,6 +3,7 @@ import interfaces.IChat
 import interfaces.IOiseau
 import interfaces.IPensionnaire
 import models.*
+import java.lang.IllegalArgumentException
 import java.time.LocalDate
 
 fun main(args: Array<String>) {
@@ -21,7 +22,7 @@ fun main(args: Array<String>) {
      */
 
 
-    val animalerie: Animalerie = Animalerie()
+    val animalerie: Animalerie = Animalerie() {message -> println(message)}
 
     animalerie.ajouterAnimal(Chat("Le Chat", 4321.0, 40.0, IAnimal.Sexe.F, IChat.Poil.COURT, "Joueur"))
     animalerie.ajouterAnimal(Chat("Jacky", 12101.0, 70.0, IAnimal.Sexe.M, IChat.Poil.LONG, "Gourmant"))
@@ -29,16 +30,18 @@ fun main(args: Array<String>) {
     animalerie.ajouterAnimal(Oiseau("Titi", 100.0, 10.0, IAnimal.Sexe.F, "Jaune", IOiseau.Habitat.PETITE_CAGE))
 
 
+    println()
     var jour = 1
     while(animalerie.pensionnaires.isNotEmpty()) {
-        println("Jour $jour")
+        println("# Simulation de la journée $jour")
+        animalerie.simulationJournee()
+        println()
 
-        println("Liste des animaux : ")
+        println("# Liste des animaux en fin de journée: ")
         for (p in animalerie.pensionnaires) {
             println(" - ${p.animal.nom}")
         }
-
-        animalerie.simulationJournee()
+        println()
 
         readLine()
         jour++

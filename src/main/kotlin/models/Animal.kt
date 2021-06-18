@@ -5,6 +5,14 @@ import interfaces.IAnimal
 // Utilisation du constructeur secondaire
 abstract class Animal: IAnimal {
 
+    //region EventListener
+    private var deathEventListener: ((IAnimal) -> Unit)? = null
+
+    override fun setDeathEventListener(listener: (IAnimal) -> Unit) {
+        deathEventListener = listener
+    }
+    //endregion
+
     // Le mot clef "final" bloque l'override dans les classes enfants
     final override val nom: String
     final override var poids : Double
@@ -12,7 +20,13 @@ abstract class Animal: IAnimal {
     final override val sexe: IAnimal.Sexe
 
     final override var estVivant: Boolean
-        private set
+        private set(value) {
+            if(!value) {
+                deathEventListener?.invoke(this)
+            }
+
+            field = value
+        }
 
     protected abstract val probaDeces : Double          // Exemple: 0.5% / 1% / 3%
 

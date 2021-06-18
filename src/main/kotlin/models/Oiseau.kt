@@ -5,6 +5,14 @@ import interfaces.IOiseau
 
 class Oiseau : Animal, IOiseau{
 
+    //region EventListener
+    private var singEventListener: ((String) -> Unit)? = null
+
+    override fun setSingEventListener(listener: (String) -> Unit) {
+        singEventListener = listener
+    }
+    //endregion
+
     override val couleur: String
     override val habitat: IOiseau.Habitat
 
@@ -25,9 +33,14 @@ class Oiseau : Animal, IOiseau{
 
     fun chanter() {
         val limite = (1..3).random()
+
+        val builder: StringBuilder = StringBuilder()
         for (x in 0 until limite) {
-            println(crier())
+            builder.append(crier()).append(" ")
         }
+
+        // Déclancher l'event (Si celui-ci n'est pas null)
+        singEventListener?.invoke("$nom: ${builder.toString()}")
     }
 
     override fun activiteMatin() {
